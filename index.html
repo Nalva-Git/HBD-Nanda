@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selamat Ulang Tahun Nanda! ★ Edisi Spesial Trailblazer</title>
+  <meta name="description" content="Website perayaan Selamat Ulang Tahun bertema game MiHoYo untuk Trailblazer Nanda, menampilkan estetika Honkai: Star Rail, Zenless Zone Zero, dan Genshin Impact.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+  
+  <!-- Google Fonts: Orbitron (Sci-Fi/HSR UI), Cinzel (Fantasy/Genshin), Outfit & Plus Jakarta Sans (Modern UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Orbitron:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Cosmic Canvas Overlay (Stardust, Sparks, Confetti) -->
+  <canvas id="cosmic-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Live Wallpaper Background Video (Honkai Star Rail Nebula) - preload='none' to avoid buffering contention -->
+  <div class="video-bg-container">
+    <video id="bg-live-wallpaper" loop muted playsinline preload="none">
+      <source src="Assets/Background/nebula-honkai-star-rail-moewalls-com.mp4" type="video/mp4">
+    </video>
+    <div class="video-bg-overlay"></div>
+    <div class="cyber-grid-overlay"></div>
+  </div>
+
+  <!-- ========================================================
+       PHASE 1: FIRST POP UP VIDEO MODAL (Zenless Zone Zero)
+       ======================================================== -->
+  <div id="popup-video-overlay" class="modal-overlay active">
+    <div class="popup-video-card">
+      <div class="popup-video-header">
+        <div class="transmission-status">
+          <span class="blinking-dot"></span>
+          <span class="transmission-label">TRANSMISI MASUK PRIORITAS TINGGI</span>
+        </div>
+        <div class="transmission-channel">
+          <span class="channel-badge">SIARAN KHUSUS NEW ERIDU × ASTRAL EXPRESS</span>
+        </div>
+        <button id="btn-close-video" class="btn-icon-close" title="Lewati Video dan Masuk ke Situs">
+          <span>✕ LEWATI</span>
+        </button>
+      </div>
+
+      <div class="video-frame-wrapper">
+        <div class="video-crt-scanline"></div>
+        <video id="popup-video-player" playsinline preload="metadata">
+          <source src="Assets/Pop%20Up%20Video/Eh-ppy%20Birthday!%20%20Zenless%20Zone%20Zero%20-%20Zenless%20Zone%20Zero%20(1080p,%20h264).mp4" type="video/mp4">
+        </video>
+        
+        <!-- Video Custom Overlay HUD -->
+        <div id="video-start-prompt" class="video-start-overlay">
+          <div class="video-prompt-content">
+            <div class="prompt-icon-ring">
+              <span class="prompt-bangboo-icon">🎉</span>
+            </div>
+            <h2>TRANSMISI ULANG TAHUN DITERIMA</h2>
+            <p>Pesan video spesial dari New Eridu &amp; Astral Express telah tiba khusus untuk <strong>Nanda</strong>!</p>
+            <div class="video-prompt-buttons">
+              <button id="btn-start-video-audio" class="btn-hoyoverse btn-gold">
+                <span class="btn-glow"></span>
+                <span class="btn-icon">▶</span>
+                <span>PUTAR VIDEO (DENGAN SUARA)</span>
+              </button>
+              <button id="btn-skip-intro" class="btn-hoyoverse btn-ghost">
+                <span>LEWATI KE PERAYAAN ➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-video-footer">
+        <div class="video-track-info">
+          <span class="video-title">"Eh-ppy Birthday!" — Siaran Spesial Zenless Zone Zero</span>
+          <span class="video-recipient">Penerima: Trailblazer / Proxy Nanda</span>
+        </div>
+        <div class="video-controls-compact">
+          <button id="btn-toggle-video-play" class="btn-control">⏸ Jeda</button>
+          <button id="btn-toggle-video-mute" class="btn-control">🔊 Suara Nyala</button>
+          <button id="btn-enter-celebration" class="btn-hoyoverse btn-cyan btn-sm">
+            <span>MASUK KE SITUS ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       PHASE 2: AGE INPUT MODAL / TRAILBLAZER ASCENSION TERMINAL
+       ======================================================== -->
+  <div id="age-modal-overlay" class="modal-overlay">
+    <div class="hoyoverse-terminal-card">
+      <div class="terminal-decor-corner top-left"></div>
+      <div class="terminal-decor-corner top-right"></div>
+      <div class="terminal-decor-corner bottom-left"></div>
+      <div class="terminal-decor-corner bottom-right"></div>
+
+      <div class="terminal-header">
+        <div class="terminal-badge">
+          <span class="icon-star">✦</span>
+          <span>REGISTRASI INTERASTRAL PEACE</span>
+        </div>
+        <h2>KALIBRASI LEVEL ASCENSION TRAILBLAZER</h2>
+        <p class="terminal-subtitle">Identifikasi: <strong>NANDA</strong> • Status: <strong>YANG BERULANG TAHUN</strong></p>
+      </div>
+
+      <div class="terminal-body">
+        <div class="terminal-hologram-box">
+          <div class="hologram-avatar-ring">
+            <span class="hologram-level-badge">LV.<span id="preview-age-badge">21</span></span>
+            <img src="Assets/firefly-hsr.gif" alt="Firefly" class="hologram-avatar-img">
+          </div>
+          <div class="hologram-text">
+            <h3>"Trailblazer Nanda, kamu mencapai Level Ascension berapa hari ini?"</h3>
+            <p>Masukkan umur barumu agar kami bisa menyesuaikan lilin kue, statistik karakter, dan doa gacha!</p>
+          </div>
+        </div>
+
+        <!-- Age Input Stepper & Quick Select -->
+        <div class="age-input-container">
+          <label for="age-input-field" class="age-label">PILIH ATAU MASUKKAN UMUR / LEVEL</label>
+          <div class="age-stepper">
+            <button id="btn-age-decrement" class="btn-stepper" title="Kurangi Umur">-</button>
+            <div class="age-display-wrapper">
+              <input type="number" id="age-input-field" min="1" max="120" value="21" class="age-numeric-input">
+              <span class="age-unit">TAHUN</span>
+            </div>
+            <button id="btn-age-increment" class="btn-stepper" title="Tambah Umur">+</button>
+          </div>
+
+          <!-- Quick Age Chips -->
+          <div class="quick-age-chips">
+            <span class="chips-label">Pilihan Cepat:</span>
+            <div class="chips-list">
+              <button class="btn-chip" data-age="17">17</button>
+              <button class="btn-chip" data-age="18">18</button>
+              <button class="btn-chip" data-age="19">19</button>
+              <button class="btn-chip" data-age="20">20</button>
+              <button class="btn-chip active" data-age="21">21</button>
+              <button class="btn-chip" data-age="22">22</button>
+              <button class="btn-chip" data-age="23">23</button>
+              <button class="btn-chip" data-age="24">24</button>
+              <button class="btn-chip" data-age="25">25</button>
+              <button class="btn-chip" data-age="26">26</button>
+              <button class="btn-chip" data-age="27">27</button>
+              <button class="btn-chip" data-age="28">28</button>
+              <button class="btn-chip" data-age="30">30</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="terminal-footer">
+        <button id="btn-confirm-age" class="btn-hoyoverse btn-gold btn-lg">
+          <span class="btn-glow"></span>
+          <span class="btn-icon">★</span>
+          <span>KONFIRMASI LEVEL &amp; MASUK KE PERAYAAN</span>
+        </button>
+        <p class="terminal-note">Kamu bisa mengubah atau mengkalibrasi ulang umur Nanda kapan saja lewat menu atas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       TOP NAVIGATION & COMMAND HUD
+       ======================================================== -->
+  <header class="hoyoverse-hud">
+    <div class="hud-left">
+      <div class="logo-group">
+        <div class="logo-symbol">✦</div>
+        <div class="logo-text">
+          <span class="logo-brand">SPESIAL HOYOVERSE</span>
+          <span class="logo-title">HBD NANDA ★ PERAYAAN SPESIAL</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="hud-center">
+      <a href="#hero-section" class="hud-link active"><span class="hud-link-bracket">[</span>STASIUN<span class="hud-link-bracket">]</span></a>
+      <a href="#cake-section" class="hud-link"><span class="hud-link-bracket">[</span>KUE ULANG TAHUN<span class="hud-link-bracket">]</span></a>
+      <a href="#gacha-section" class="hud-link"><span class="hud-link-bracket">[</span>WARP 5★<span class="hud-link-bracket">]</span></a>
+      <a href="#messenger-section" class="hud-link"><span class="hud-link-bracket">[</span>PESAN CHAT<span class="hud-link-bracket">]</span></a>
+      <a href="#memories-section" class="hud-link"><span class="hud-link-bracket">[</span>KENANGAN<span class="hud-link-bracket">]</span></a>
+      <a href="#passport-section" class="hud-link"><span class="hud-link-bracket">[</span>PASPOR<span class="hud-link-bracket">]</span></a>
+    </nav>
+
+    <div class="hud-right">
+      <!-- Clickable Age / Level Badge to Change Age -->
+      <button id="hud-age-trigger" class="hud-stat-badge" title="Klik untuk mengubah umur">
+        <span class="badge-icon">★</span>
+        <span class="badge-text">LV.<span class="val-age-dynamic">21</span></span>
+        <span class="badge-tag">UBAH</span>
+      </button>
+
+      <!-- Replay Video Button -->
+      <button id="btn-replay-video" class="btn-hud-action" title="Tonton Video Pembuka Lagi">
+        <span class="icon">🎬</span>
+        <span>VIDEO</span>
+      </button>
+
+      <!-- Music Quick Toggle -->
+      <button id="btn-hud-music" class="btn-hud-action" title="Nyalakan/Matikan Musik Latar">
+        <span class="icon" id="hud-music-icon">🎵</span>
+        <span id="hud-music-status">BGM: NYALA</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       MAIN CELEBRATION CONTENT
+       ======================================================== -->
+  <main class="main-container">
+    
+    <!-- SECTION 1: HERO & 5-STAR SPLASH -->
+    <section id="hero-section" class="hero-section">
+      <div class="hero-backdrop-glow"></div>
+      <div class="hero-content">
+        <div class="hero-badge-ribbon">
+          <span class="ribbon-star">★★★★★</span>
+          <span class="ribbon-text">CELEBRANT ULANG TAHUN BINTANG 5 TERBATAS</span>
+          <span class="ribbon-star">★★★★★</span>
+        </div>
+
+        <h1 class="hero-main-title">
+          <span class="title-sub">LEVEL ASCENSION TRAILBLAZER <span class="val-age-dynamic highlight-gold">21</span></span>
+          <span class="title-name">SELAMAT ULANG TAHUN, NANDA!</span>
+        </h1>
+
+        <div class="hero-profile-specs">
+          <div class="spec-chip">
+            <span class="spec-label">PATH</span>
+            <span class="spec-val">The Elation &amp; The Harmony</span>
+          </div>
+          <div class="spec-chip">
+            <span class="spec-label">TIPE COMBAT</span>
+            <span class="spec-val">Imaginary / Quantum ✦</span>
+          </div>
+          <div class="spec-chip">
+            <span class="spec-label">AFILIASI</span>
+            <span class="spec-val">Astral Express &amp; New Eridu</span>
+          </div>
+          <div class="spec-chip">
+            <span class="spec-label">UMUR / LEVEL</span>
+            <span class="spec-val highlight-gold">LEVEL <span class="val-age-dynamic">21</span></span>
+          </div>
+        </div>
+
+        <!-- Featured Chibi Companions Banner -->
+        <div class="hero-featured-cards">
+          <div class="hero-gif-card">
+            <img src="Assets/firefly-hsr.gif" alt="Firefly Birthday" class="hero-gif-img">
+            <div class="hero-gif-label">
+              <span class="speaker">Firefly:</span>
+              <span class="quote">"Selamat Ulang Tahun, Nanda! Semoga semua impianmu terwujud melintasi bintang-bintang!"</span>
+            </div>
+          </div>
+          <div class="hero-gif-card">
+            <img src="Assets/happy-birthday.gif" alt="Yoimiya Birthday" class="hero-gif-img">
+            <div class="hero-gif-label">
+              <span class="speaker">Yoimiya:</span>
+              <span class="quote">"Lihat kembang api spesial ulang tahun ini khusus buat kamu!"</span>
+            </div>
+          </div>
+          <div class="hero-gif-card">
+            <img src="Assets/zzz-zenless-zone-zero.gif" alt="Wise and Bangboo" class="hero-gif-img">
+            <div class="hero-gif-label">
+              <span class="speaker">Random Play:</span>
+              <span class="quote">"Keluarga New Eridu mengirimkan cinta dan doa ulang tahun terbesar untuk Proxy Nanda!"</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-cta-group">
+          <a href="#cake-section" class="btn-hoyoverse btn-gold">
+            <span class="btn-glow"></span>
+            <span class="btn-icon">🎂</span>
+            <span>TIUP LILIN KUE</span>
+          </a>
+          <a href="#gacha-section" class="btn-hoyoverse btn-cyan">
+            <span class="btn-glow"></span>
+            <span class="btn-icon">✦</span>
+            <span>PULL WARP 10x SPESIAL</span>
+          </a>
+          <button id="btn-hero-change-age" class="btn-hoyoverse btn-ghost">
+            <span class="btn-icon">⚙</span>
+            <span>UBAH UMUR (SEKARANG: <span class="val-age-dynamic">21</span>)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE BIRTHDAY CAKE & CANDLE BLOWING -->
+    <section id="cake-section" class="cake-section">
+      <div class="section-header">
+        <div class="section-tag">DAPUR ASTRAL EXPRESS</div>
+        <h2 class="section-title">KUE ULANG TAHUN SURGAWI</h2>
+        <p class="section-desc">Dibuat langsung oleh Pom-Pom dengan gula bintang Penacony! Tiup semua <span class="val-age-dynamic highlight-gold">21</span> lilin untuk membuka doa keberkahan agung!</p>
+      </div>
+
+      <div class="cake-interactive-stage">
+        <!-- Interactive Candle Status Monitor -->
+        <div class="candle-monitor-panel">
+          <div class="monitor-item">
+            <span class="monitor-label">TOTAL LILIN</span>
+            <span class="monitor-val highlight-gold val-age-dynamic">21</span>
+          </div>
+          <div class="monitor-item">
+            <span class="monitor-label">LILIN MENYALA</span>
+            <span class="monitor-val" id="monitor-candles-lit">21</span>
+          </div>
+          <div class="monitor-item">
+            <span class="monitor-label">STATUS</span>
+            <span class="monitor-val" id="monitor-cake-status">SIAP DITIUP</span>
+          </div>
+        </div>
+
+        <!-- The Cake Graphics Container -->
+        <div class="cake-display-container">
+          <!-- Floating Candles Container (Dynamically populated based on age) -->
+          <div id="cake-candles-row" class="cake-candles-row">
+            <!-- Candles inserted by JS -->
+          </div>
+
+          <!-- Cake Illustration Structure -->
+          <div class="cake-tier cake-tier-top">
+            <div class="frosting-drips"></div>
+            <div class="cake-badge">★ <span class="val-age-dynamic">21</span> ★</div>
+          </div>
+          <div class="cake-tier cake-tier-middle">
+            <div class="frosting-layer"></div>
+            <div class="cake-decorations">✦ ULANG TAHUN NANDA ✦</div>
+          </div>
+          <div class="cake-tier cake-tier-bottom">
+            <div class="frosting-base"></div>
+          </div>
+          <div class="cake-plate"></div>
+        </div>
+
+        <!-- Cake Actions -->
+        <div class="cake-actions">
+          <button id="btn-blow-all-candles" class="btn-hoyoverse btn-gold btn-lg">
+            <span class="btn-glow"></span>
+            <span class="btn-icon">💨</span>
+            <span>TIUP SEMUA LILIN!</span>
+          </button>
+          <button id="btn-relight-candles" class="btn-hoyoverse btn-ghost">
+            <span class="btn-icon">🔥</span>
+            <span>NYALAKAN KEMBALI LILIN</span>
+          </button>
+        </div>
+        <p class="cake-hint">Tips: Kamu juga bisa klik atau sentuh lilin satu per satu untuk meniupnya!</p>
+
+        <!-- Secret Birthday Wish Reveal Card (Hidden until all candles are out) -->
+        <div id="cake-wish-banner" class="cake-wish-banner hidden">
+          <div class="wish-banner-sparkle">🎉</div>
+          <h3>★ BERKAH ASCENSION TERBUKA! ★</h3>
+          <p class="wish-banner-text">"Semua <span class="val-age-dynamic">21</span> lilin telah padam! Semoga setiap tarikan gacha selalu dapat Bintang 5 tanpa kalah 50/50, kesehatan selalu 100%, rezeki lancar melimpah, dan alam semesta melimpahkan kebahagiaan tiada tara untuk Nanda tahun ini!"</p>
+          <div class="wish-banner-cheer">
+            <img src="Assets/36le045l0psd1.gif" alt="Bangboo Happy" class="wish-cheer-gif">
+            <img src="Assets/7197-peak.gif" alt="Ellen Joe Happy" class="wish-cheer-gif">
+            <img src="Assets/854e4448940d47a77b24897146c0dbb3_6470375566460720066.gif" alt="Herta Kuru Kuru" class="wish-cheer-gif">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: SPECIAL 5-STAR BIRTHDAY WARP BANNER (GACHA SIMULATOR) -->
+    <section id="gacha-section" class="gacha-section">
+      <div class="section-header">
+        <div class="section-tag">SISTEM WARP INTERASTRAL</div>
+        <h2 class="section-title">WARP SPESIAL ULANG TAHUN: PERAYAAN NANDA</h2>
+        <p class="section-desc">Rate-Up 100% Dijamin Bintang 5! Tarik doa ulang tahun spesial bersama Firefly, Ellen Joe, Silver Wolf, Jane Doe, Herta, dan kawan-kawan!</p>
+      </div>
+
+      <div class="gacha-banner-wrapper">
+        <div class="gacha-banner-card">
+          <!-- Currency Display -->
+          <div class="gacha-currency-bar">
+            <div class="currency-item">
+              <span class="curr-icon">💎</span>
+              <span class="curr-name">STELLAR JADE:</span>
+              <span class="curr-val" id="val-stellar-jade">999,999</span>
+            </div>
+            <div class="currency-item">
+              <span class="curr-icon">🎫</span>
+              <span class="curr-name">TIKET SPESIAL:</span>
+              <span class="curr-val" id="val-special-pass">∞ (TAK TERBATAS)</span>
+            </div>
+            <div class="currency-item">
+              <span class="curr-icon">★</span>
+              <span class="curr-name">PITY COUNT:</span>
+              <span class="curr-val highlight-gold">DIJAMIN 5★</span>
+            </div>
+          </div>
+
+          <!-- Banner Artwork Graphic -->
+          <div class="gacha-banner-art">
+            <div class="banner-gradient-fx"></div>
+            <div class="banner-badge">WARP EVENT KARAKTER</div>
+            <h3 class="banner-char-title">NANDA: TAHUN KE-<span class="val-age-dynamic">21</span></h3>
+            <p class="banner-char-subtitle">Legenda Bintang 5 Astral Express • Rate-Up Terjamin</p>
+            
+            <div class="banner-characters-preview">
+              <div class="char-thumb"><img src="Assets/firefly-hsr.gif" alt="Firefly"><span>Firefly</span></div>
+              <div class="char-thumb"><img src="Assets/7197-peak.gif" alt="Ellen Joe"><span>Ellen Joe</span></div>
+              <div class="char-thumb"><img src="Assets/854e4448940d47a77b24897146c0dbb3_6470375566460720066.gif" alt="Herta"><span>Herta</span></div>
+              <div class="char-thumb"><img src="Assets/04e43a21618930b07e5c5a115b20ac6a_8813355330775154617.gif" alt="Silver Wolf"><span>Silver Wolf</span></div>
+              <div class="char-thumb"><img src="Assets/fb7167bbebada0160f400b622adbe917.gif" alt="Stelle"><span>Stelle</span></div>
+            </div>
+          </div>
+
+          <!-- Warp Action Buttons -->
+          <div class="gacha-action-bar">
+            <button id="btn-warp-single" class="btn-warp btn-warp-1">
+              <div class="warp-btn-title">WARP × 1</div>
+              <div class="warp-btn-cost">🎫 × 1 Star Rail Pass</div>
+            </button>
+            <button id="btn-warp-ten" class="btn-warp btn-warp-10">
+              <div class="warp-btn-glow"></div>
+              <div class="warp-btn-title">★ WARP × 10 ★</div>
+              <div class="warp-btn-cost">🎫 × 10 Star Rail Pass (SEMUA 5★ DIJAMIN!)</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pulled Items Archive / Collection -->
+        <div class="gacha-collection-drawer">
+          <div class="drawer-header">
+            <h4>KOLEKSI TEMAN ULANG TAHUN (<span id="collection-count">0</span> / 18 Terbuka)</h4>
+            <button id="btn-clear-collection" class="btn-xs-text">Reset Riwayat Pull</button>
+          </div>
+          <div id="collection-grid" class="collection-grid">
+            <p class="collection-empty">Belum ada warp yang ditarik! Tekan <strong>WARP × 10</strong> di atas untuk membuka doa Bintang 5 pertamamu!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ASTRAL MESSENGER & CHARACTER DIALOGUE -->
+    <section id="messenger-section" class="messenger-section">
+      <div class="section-header">
+        <div class="section-tag">TERMINAL KOMUNIKASI ASTRAL</div>
+        <h2 class="section-title">PESAN MASUK DARI NEW ERIDU &amp; PENACONY</h2>
+        <p class="section-desc">Teman-teman MiHoYo mengirimkan ucapan ulang tahun spesial untukmu! Klik salah satu teman untuk membaca dan memilih balasanmu!</p>
+      </div>
+
+      <div class="messenger-container">
+        <!-- Contact List Sidebar -->
+        <div class="messenger-sidebar">
+          <div class="sidebar-header">
+            <span>KONTAK (6)</span>
+            <span class="online-indicator">SEMUA ONLINE</span>
+          </div>
+          <div class="contact-list" id="contact-list">
+            <button class="contact-item active" data-contact="firefly">
+              <img src="Assets/firefly-hsr.gif" alt="Firefly" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Firefly <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Selamat Ulang Tahun, Nanda! Aku punya kado..."</div>
+              </div>
+              <span class="msg-unread-dot"></span>
+            </button>
+
+            <button class="contact-item" data-contact="ellen">
+              <img src="Assets/7197-peak.gif" alt="Ellen Joe" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Ellen Joe <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Hai, lagi rehat kerja maid nih buat ultahmu..."</div>
+              </div>
+              <span class="msg-unread-dot"></span>
+            </button>
+
+            <button class="contact-item" data-contact="silverwolf">
+              <img src="Assets/04e43a21618930b07e5c5a115b20ac6a_8813355330775154617.gif" alt="Silver Wolf" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Silver Wolf <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Aku baru aja nge-hack akunmu biar gacha hoki 100%."</div>
+              </div>
+            </button>
+
+            <button class="contact-item" data-contact="herta">
+              <img src="Assets/854e4448940d47a77b24897146c0dbb3_6470375566460720066.gif" alt="Herta" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Madam Herta <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Kururin! Met ultah, jangan lupa Simulated Universe."</div>
+              </div>
+            </button>
+
+            <button class="contact-item" data-contact="stelle">
+              <img src="Assets/fb7167bbebada0160f400b622adbe917.gif" alt="Stelle" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Trailblazer Stelle <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Liat nih kado harta karun yang kutemuin di tong sampah!"</div>
+              </div>
+            </button>
+
+            <button class="contact-item" data-contact="zhuyuan">
+              <img src="Assets/b667bf0b6cc874abe9d0e7d5b5c1a837_8564433332709119931.gif" alt="Zhu Yuan" class="contact-avatar">
+              <div class="contact-info">
+                <div class="contact-name">Zhu Yuan (PubSec) <span class="badge-star">5★</span></div>
+                <div class="contact-last-msg">"Kapten Zhu Yuan melapor! Keamanan aman terkendali di ultah Nanda!"</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Conversation Area -->
+        <div class="messenger-chat-box">
+          <div class="chat-header">
+            <div class="chat-header-user">
+              <img id="chat-header-avatar" src="Assets/firefly-hsr.gif" alt="Avatar">
+              <div>
+                <h4 id="chat-header-name">Firefly</h4>
+                <span class="chat-status">Status: Merayakan Level <span class="val-age-dynamic">21</span> Nanda</span>
+              </div>
+            </div>
+            <div class="chat-header-action">
+              <span class="encrypted-tag">CHAT TERENKRIPSI ASTRAL</span>
+            </div>
+          </div>
+
+          <!-- Message History Window -->
+          <div id="chat-messages-container" class="chat-messages-container">
+            <!-- Messages inserted dynamically -->
+          </div>
+
+          <!-- Interactive Reply Options -->
+          <div class="chat-reply-container">
+            <span class="reply-prompt">Pilih Balasan Trailblazer Nanda:</span>
+            <div id="chat-reply-options" class="chat-reply-options">
+              <!-- Interactive reply choices inserted dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: MEMORIES & CELEBRATION GIF GALLERY -->
+    <section id="memories-section" class="memories-section">
+      <div class="section-header">
+        <div class="section-tag">ARSIP MULTIVERSE HOYOVERSE</div>
+        <h2 class="section-title">GALERI KENANGAN ULANG TAHUN</h2>
+        <p class="section-desc">Semua 18 animasi &amp; stiker perayaan ulang tahun Nanda dari Honkai: Star Rail, Zenless Zone Zero, dan Genshin Impact!</p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="gallery-filter-tabs">
+        <button class="btn-filter active" data-filter="all">SEMUA KENANGAN (18)</button>
+        <button class="btn-filter" data-filter="hsr">HONKAI: STAR RAIL</button>
+        <button class="btn-filter" data-filter="zzz">ZENLESS ZONE ZERO</button>
+        <button class="btn-filter" data-filter="genshin">GENSHIN IMPACT</button>
+      </div>
+
+      <!-- Grid of all 18 GIFs with custom cards -->
+      <div id="memories-grid" class="memories-grid">
+        <!-- Populated dynamically with all 18 GIFs -->
+      </div>
+    </section>
+
+    <!-- SECTION 6: NANDA'S 5-STAR CHARACTER PROFILE / PASSPORT -->
+    <section id="passport-section" class="passport-section">
+      <div class="section-header">
+        <div class="section-tag">PASPOR ASTRAL EXPRESS</div>
+        <h2 class="section-title">PROFIL KARAKTER BINTANG 5: NANDA</h2>
+        <p class="section-desc">Lembar Karakter Resmi Trailblazer untuk Ascension Level <span class="val-age-dynamic">21</span>.</p>
+      </div>
+
+      <div class="passport-card-wrapper">
+        <div class="passport-card" id="nanda-passport-card">
+          <div class="passport-bg-watermark">★★★★★</div>
+          <div class="passport-top">
+            <div class="passport-title-group">
+              <span class="p-rarity">★★★★★ EDISI KHUSUS BINTANG 5</span>
+              <h3 class="p-name">NANDA</h3>
+              <p class="p-sub">Sang Legenda Abadi • Level <span class="val-age-dynamic highlight-gold">21</span></p>
+            </div>
+            <div class="passport-element-badge">
+              <span class="elem-icon">✦</span>
+              <span class="elem-name">IMAGINARY / ELATION</span>
+            </div>
+          </div>
+
+          <div class="passport-middle">
+            <div class="passport-avatar-column">
+              <div class="passport-frame">
+                <img src="Assets/36le045l0psd1.gif" alt="Avatar Nanda" class="passport-img" id="passport-avatar-img">
+                <div class="frame-decor">LV.<span class="val-age-dynamic">21</span></div>
+              </div>
+              <div class="avatar-selector-chips">
+                <span class="chip-label">Ganti Maskot Kartu:</span>
+                <button class="btn-mascot-chip active" data-gif="Assets/36le045l0psd1.gif">Bangboo</button>
+                <button class="btn-mascot-chip" data-gif="Assets/firefly-hsr.gif">Firefly</button>
+                <button class="btn-mascot-chip" data-gif="Assets/7197-peak.gif">Ellen Joe</button>
+                <button class="btn-mascot-chip" data-gif="Assets/04e43a21618930b07e5c5a115b20ac6a_8813355330775154617.gif">Silver Wolf</button>
+                <button class="btn-mascot-chip" data-gif="Assets/854e4448940d47a77b24897146c0dbb3_6470375566460720066.gif">Herta</button>
+                <button class="btn-mascot-chip" data-gif="Assets/yhsos1maimng1.gif">Evernight</button>
+                <button class="btn-mascot-chip" data-gif="Assets/200w.gif">Mem</button>
+              </div>
+            </div>
+
+            <!-- Stats Radar / Attributes -->
+            <div class="passport-stats-column">
+              <h4>ATRIBUT TEMPUR MAKSIMAL</h4>
+              <div class="stats-table">
+                <div class="stat-row">
+                  <span class="s-name">HP (Kesehatan &amp; Umur Panjang)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 100%;"></div></div>
+                  <span class="s-val">999,999</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">ATK (Energi Positif Ulang Tahun)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 100%;"></div></div>
+                  <span class="s-val">9,999</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">CRIT Rate (Tingkat Keberhasilan Hidup)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 100%;"></div></div>
+                  <span class="s-val">100.0%</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">CRIT DMG (Pengganda Kebahagiaan)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 100%;"></div></div>
+                  <span class="s-val">520.0%</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Speed (Kecepatan Trailblaze)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 95%;"></div></div>
+                  <span class="s-val">160 SPD</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Energy Recharge (Semangat Tanpa Batas)</span>
+                  <div class="s-bar"><div class="s-fill" style="width: 100%;"></div></div>
+                  <span class="s-val">200.0%</span>
+                </div>
+              </div>
+
+              <!-- Unique Skills / Talents -->
+              <div class="passport-skills">
+                <h4>TALENTA EKSKLUSIF ULANG TAHUN</h4>
+                <div class="skill-item">
+                  <span class="skill-tag">ULTIMATE</span>
+                  <strong>"Kaskade Perayaan Antarbintang":</strong> Menghilangkan semua nasib buruk, menjamin kemenangan 50/50 di banner berikutnya, dan memberkahi Nanda dengan kesehatan serta rezeki berlimpah!
+                </div>
+                <div class="skill-item">
+                  <span class="skill-tag">PASIF</span>
+                  <strong>"Rahmat Ascension Level <span class="val-age-dynamic">21</span>":</strong> Meningkatkan kebahagiaan sebesar 100% setiap hari sepanjang tahun. Efek ini tidak bisa dihilangkan.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="passport-footer">
+            <div class="passport-serial">
+              <span>DITERBITKAN OLEH: AWAK EKSPEDISI ASTRAL EXPRESS</span>
+              <span>PASSPORT ID: HSR-ZZZ-NANDA-<span class="val-age-dynamic">21</span></span>
+            </div>
+            <button id="btn-copy-card" class="btn-hoyoverse btn-gold btn-sm">
+              <span class="btn-icon">📋</span>
+              <span>SALIN KARTU UCAPAN ULANG TAHUN</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: HEARTFELT FRIEND'S WISH & FORTUNE ROLLER -->
+    <section class="friend-wish-section">
+      <div class="friend-wish-card">
+        <div class="wish-decor-icon">💌</div>
+        <h2>SURAT SPESIAL UNTUK NANDA</h2>
+        <div class="letter-body">
+          <p class="letter-greeting">Untuk sahabatku Nanda,</p>
+          <p>
+            Selamat Ulang Tahun yang ke-<span class="val-age-dynamic highlight-gold">21</span>! Semoga bertambah usia, semakin bijak, semakin keren, dan semakin sukses selalu!
+            Semoga di usia baru ini kamu dilimpahi kebahagiaan tanpa batas, gacha selalu wangi di setiap banner, kenangan indah yang tak terlupakan, kesehatan yang selalu prima, dan kesuksesan dalam segala impian yang kamu kejar.
+          </p>
+          <p>
+            Mau saat menjelajahi bintang bersama Astral Express, menyelami Hollow di New Eridu, ataupun berkelana di Teyvat, punya sahabat sepertimu adalah berkah Bintang 5 yang sejati!
+          </p>
+          <p class="letter-sign">Selamat ulang tahun, kawan! Mari bersulang untuk tahun baru yang penuh keajaiban! 🥂✨</p>
+        </div>
+
+        <!-- Birthday Fortune Generator -->
+        <div class="fortune-box">
+          <div class="fortune-header">
+            <span>MESIN RAMALAN TRAILBLAZE HARIAN</span>
+          </div>
+          <div id="fortune-result" class="fortune-result">
+            "✦ RAMALAN HARI INI: Stat keberuntungan Nanda naik 1000%! Setiap gacha 50/50 tahun ini dijamin menang di pity awal! ✦"
+          </div>
+          <button id="btn-roll-fortune" class="btn-hoyoverse btn-cyan btn-sm">
+            <span>🎲 PUTAR RAMALAN ULANG TAHUN BARU</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       WARP REVEAL CINEMA OVERLAY (When Pulling on Gacha)
+       ======================================================== -->
+  <div id="warp-reveal-overlay" class="warp-reveal-overlay">
+    <div class="warp-meteor-container" id="warp-meteor-container">
+      <div class="warp-meteor-trail"></div>
+      <div class="warp-meteor-core"></div>
+    </div>
+    
+    <div class="warp-results-wrapper" id="warp-results-wrapper">
+      <div class="warp-results-header">
+        <div class="warp-rarity-burst">★★★★★</div>
+        <h2>HADIAH SPESIAL ULANG TAHUN DIDAPATKAN!</h2>
+        <p>Selamat, Nanda! Kamu mendapatkan teman-teman perayaan Bintang 5 terjamin!</p>
+      </div>
+
+      <div class="warp-cards-grid" id="warp-cards-grid">
+        <!-- Results dynamically inserted -->
+      </div>
+
+      <div class="warp-results-footer">
+        <button id="btn-close-warp-reveal" class="btn-hoyoverse btn-gold btn-lg">
+          <span class="btn-icon">✦</span>
+          <span>KUMPULKAN HADIAH &amp; LANJUTKAN</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       FLOATING ASTRAL EXPRESS PHONOGRAPH (Music Player Dock)
+       ======================================================== -->
+  <div id="music-player-dock" class="music-player-dock">
+    <div class="dock-toggle-btn" id="btn-toggle-dock" title="Buka / Perkecil Pemutar Musik">
+      <span class="vinyl-icon-mini">💿</span>
+    </div>
+
+    <div class="dock-expanded-content">
+      <div class="dock-vinyl-container">
+        <div class="vinyl-disc spinning" id="vinyl-disc">
+          <div class="vinyl-grooves"></div>
+          <div class="vinyl-center-art">
+            <img src="Assets/e89ba6003caecbf3d2a8186b28bfdbe8_4645008944424366510.gif" alt="Robin EP">
+          </div>
+        </div>
+        <div class="vinyl-needle" id="vinyl-needle"></div>
+      </div>
+
+      <div class="dock-track-details">
+        <div class="dock-channel-tag">FONOGRAF ASTRAL</div>
+        <div class="dock-track-name">Beyond This Station</div>
+        <div class="dock-artist-name">Honkai: Star Rail EP (Robin)</div>
+
+        <!-- Audio Visualizer Canvas -->
+        <canvas id="audio-visualizer-canvas" class="audio-visualizer-canvas" width="160" height="24"></canvas>
+
+        <div class="dock-controls-row">
+          <button id="btn-audio-play-pause" class="btn-audio-ctrl" title="Putar/Jeda">⏸</button>
+          <div class="dock-volume-group">
+            <span class="vol-icon" id="btn-audio-mute">🔊</span>
+            <input type="range" id="audio-volume-slider" min="0" max="1" step="0.05" value="0.75" class="audio-slider">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Audio Element -->
+  <audio id="bg-audio-player" loop preload="auto">
+    <source src="Bg%20music/Honkai%20Star%20Rail%20EP%20Beyond%20This%20Station%20-%20Honkai%20Star%20Rail.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "hbd-nanda",
+  "version": "1.0.0",
+  "description": "Happy Birthday Nanda - MiHoYo Game Themed Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["birthday", "mihoyo", "honkai-star-rail", "zenless-zone-zero", "genshin-impact"],
+  "author": "",
+  "license": "ISC"
+}
